@@ -7,7 +7,7 @@ using static Logics.BoardSpot;
 
 namespace Logics
 {
-    internal class Player
+    public class Player
     {
         private int m_Score;
         private readonly eSpotOnBoard m_FirstOrSecondPlayer;

@@ -7,11 +7,11 @@ using static Logics.BoardSpot;
 
 namespace Program
 {
-    internal class UserInterface
+    public class UserInterface
     {
         public const int IncreaseLineLength = 4;
 
-        internal void StartGame()
+        public void StartGame()
         {
             Console.WriteLine(@"Welcome to reversed Tic-tac-toe!
                                 Please enter the size of the board (a number between 1-9)");
