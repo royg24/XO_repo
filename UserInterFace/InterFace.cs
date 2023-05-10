@@ -19,15 +19,17 @@ namespace UserInterface
         {
             Console.WriteLine(
 @"Welcome to reversed Tic-tac-toe!
-Please enter the size of the board (a number between 1-9)");
+Please enter the size of the board (a number between 1-9)
+                             ");
             int boardSize = ReturnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
             m_Player1 = new Player(eSpotOnBoard.player1, false);
             Console.WriteLine(
-                @"Choose the type of game:
-                1. Play against other player.
-                2. Play against the computer.
-                                ");
+@"Choose the type of game:
+1. Play against other player.
+2. Play against the computer.
+                             ");
+            PlayerOrComputer();
 
         }
         public void DurationOfGame()
@@ -37,10 +39,12 @@ Please enter the size of the board (a number between 1-9)");
         public void PlayerOrComputer()
         {
             int choice;
-            do
+            int.TryParse(Console.ReadLine(), out choice);
+            while(choice != 1 && choice != 2)
             {
-               int.TryParse(Console.ReadLine(), out choice);
-            }while(choice != 1 || choice != 2);
+                InvalidInputMessagePrint();
+                int.TryParse(Console.ReadLine(), out choice);
+            }
             if(choice == 1)
             {
                 m_Player2 = new Player(eSpotOnBoard.player2, false);
@@ -53,12 +57,21 @@ Please enter the size of the board (a number between 1-9)");
         public int ReturnValidBoardSize()
         {
             int boardSize;
-            do
+            int.TryParse(Console.ReadLine(), out boardSize);
+            while (boardSize < 1 || boardSize > 9)
             {
+                InvalidInputMessagePrint();
                 int.TryParse(Console.ReadLine(), out boardSize);
-            } while (boardSize < 1 || boardSize > 9);
+            }
             return boardSize;
             
+        }
+        public void InvalidInputMessagePrint()
+        {
+            Console.WriteLine(
+@"Invalid input!
+please enter a new value."
+                );
         }
         public void PrintBoard(eSpotOnBoard[,] i_GmaeBoard)
         {
