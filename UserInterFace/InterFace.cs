@@ -38,14 +38,14 @@ Please enter the size of the board (a number between 1-9)
         }
         public void PlayerOrComputer()
         {
-            int choice;
-            int.TryParse(Console.ReadLine(), out choice);
-            while(choice != 1 && choice != 2)
+            string choice;
+            choice = Console.ReadLine();
+            while(choice != "1" && choice != "2")
             {
                 InvalidInputMessagePrint();
-                int.TryParse(Console.ReadLine(), out choice);
+                choice = Console.ReadLine();
             }
-            if(choice == 1)
+            if(choice == "1")
             {
                 m_Player2 = new Player(eSpotOnBoard.player2, false);
             }
