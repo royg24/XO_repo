@@ -38,5 +38,13 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Logics">
+      <HintPath>..\Logics\bin\Debug\Logics.dll</HintPath>
+    </Reference>
+    <Reference Include="UserInterFace">
+      <HintPath>..\UserInterFace\bin\Debug\UserInterFace.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
