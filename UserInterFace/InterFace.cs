@@ -19,22 +19,34 @@ namespace UserInterface
         {
             Console.WriteLine(
 @"Welcome to reversed Tic-tac-toe!
-Please enter the size of the board (a number between 1-9)
-                             ");
+Please enter the size of the board (a number between 1-9)");
             int boardSize = ReturnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
             m_Player1 = new Player(eSpotOnBoard.player1, false);
             Console.WriteLine(
 @"Choose the type of game:
 1. Play against other player.
-2. Play against the computer.
-                             ");
+2. Play against the computer.");
             PlayerOrComputer();
 
         }
         public void DurationOfGame()
         {
-            PrintBoard(m_GameManager.GameBoard.BoardMatrix);
+            bool ThereIsSequence = false;
+            bool PlayerQuits = false;
+            bool BoardIsFull = false;
+            string row;
+            string column;
+            while(ThereIsSequence == false && PlayerQuits == false && BoardIsFull == false)
+            {
+                PrintBoard(m_GameManager.GameBoard.BoardMatrix);
+
+                Ex02.ConsoleUtils.Screen.Clear();
+            }
+        }
+        public void GetChoosenSpotOnBoardFromPlayer(/*out*/ string o_Row, /*out*/ string o_Column)
+        {
+            Console.WriteLine("Please choose a spot on the board in the format: i j");
         }
         public void PlayerOrComputer()
         {
@@ -76,10 +88,23 @@ please enter a new value."
         public void PrintBoard(eSpotOnBoard[,] i_GmaeBoard)
         {
             string cellOnBoard;
+            string startingIndex;
+            string upperIndex;
             int sizeOfLine = i_GmaeBoard.GetLength(0);
             int index = 0;
+            for(int i = 0; i < sizeOfLine; i++)
+            {
+                upperIndex = string.Format("  {0} ", i + 1);
+                Console.Write(upperIndex);
+            }
+            Console.WriteLine();
             foreach (eSpotOnBoard element in i_GmaeBoard)
             {
+                if(index % sizeOfLine  == 0)
+                {
+                    startingIndex = string.Format("{0}", (index / sizeOfLine) + 1);
+                    Console.Write(startingIndex);
+                }
                 cellOnBoard = string.Format("| {0} ", GetSymbolOfPlayer(element));
                 Console.Write(cellOnBoard);
                 if ((index + 1) % sizeOfLine == 0)
@@ -107,7 +132,7 @@ please enter a new value."
         }
         internal void PrintSeperatorLine(int i_Size)
         {
-            string seperatorLine = "";
+            string seperatorLine = " ";
             for (int i = 0; i < i_Size; i++)
             {
                 seperatorLine += "=";
