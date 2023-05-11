@@ -59,25 +59,29 @@ namespace Logics
         }
         public bool CheckIfAPlayerQuit(Player i_CurrentPlayer, string i_Input)
         {
+            bool result;
             if(i_Input == QuitString)
             {
-                return true;
+                result = true;
             }
             else
             {
-                return false;
+                result = false;
             }
+            return result;
         }
         public bool CheckIfBoardFull()
         {
+            bool result;
             if(m_TurnsCounter == m_Board.BoardMatrix.Length)
             {
-                return true;
+                result = true;
             }
             else
             {
-                return false;
+                result = false;
             }
+            return result;
         }
     }
 }

@@ -36,13 +36,17 @@ Please enter the size of the board (a number between 1-9)");
             bool ThereIsSequence = false;
             bool PlayerQuits = false;
             bool BoardIsFull = false;
+            bool IsSpotTaken = false;
             string row;
             string column;
             while(ThereIsSequence == false && PlayerQuits == false && BoardIsFull == false)
             {
                 PrintBoard(m_GameManager.GameBoard.BoardMatrix);
-                GetChoosenSpotOnBoardFromPlayer(out row,out column);
-                m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                while (IsSpotTaken == false)
+                {
+                    GetChoosenSpotOnBoardFromPlayer(out row, out column);
+                    IsSpotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                }
                 //check if game ended
                 Ex02.ConsoleUtils.Screen.Clear();
             }
@@ -76,7 +80,7 @@ Enter the row's number:"
                     InvalidInputMessagePrint();
                 }
                 input = Console.ReadLine();
-                if (input == GameManager.QuitString)
+                if (input == QuitString)
                 {
                     break;
                 }
