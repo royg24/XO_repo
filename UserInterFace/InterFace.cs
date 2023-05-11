@@ -15,6 +15,7 @@ namespace UserInterface
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
+        private AllGamesData m_AllGamesData;
 
         public InterFace()
         {
@@ -24,6 +25,7 @@ Please enter the size of the board (a number between 1-9)");
             int boardSize = ReturnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
             m_Player1 = new Player(eSpotOnBoard.player1, false);
+            m_AllGamesData = new AllGamesData();
             Console.WriteLine(
 @"Choose the type of game:
 1. Play against other player.
@@ -36,14 +38,14 @@ Please enter the size of the board (a number between 1-9)");
             bool ThereIsSequence = false;
             bool PlayerQuits = false;
             bool BoardIsFull = false;
-            bool IsSpotTaken = false;
+            bool IsSpotNotTaken = false;
             string row = null;
             string column = null;
             eSpotOnBoard CurrentPlayer;
             while(ThereIsSequence == false && PlayerQuits == false && BoardIsFull == false)
             {
                 PrintBoard(m_GameManager.GameBoard.BoardMatrix);
-                while (IsSpotTaken == false)
+                do
                 {
                     GetChoosenSpotOnBoardFromPlayer(out row, out column);
                     if (m_GameManager.CheckIfAPlayerQuit(out CurrentPlayer, row) == true)
@@ -51,14 +53,14 @@ Please enter the size of the board (a number between 1-9)");
                         PlayerQuits = true;
                         break;
                     }
-                    IsSpotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
-                }
-                if(m_GameManager.CheckForASequence(out CurrentPlayer, int.Parse(row), int.Parse(column)) == true)
+                    IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                } while (IsSpotNotTaken == false) ;
+                if (m_GameManager.CheckForASequence(out CurrentPlayer, int.Parse(row), int.Parse(column)) == true)
                 {
                     ThereIsSequence = true;
                     break;
                 }
-                if(m_GameManager.CheckIfBoardFull() == true)
+                if (m_GameManager.CheckIfBoardFull() == true)
                 {
                     BoardIsFull = true;
                     break;
@@ -192,6 +194,29 @@ please enter a new value."
                 seperatorLine += "=";
             }
             Console.WriteLine(seperatorLine);
+        }
+        public void ShowScoreBoard2(AllGamesData i_AllGamesData)
+        {
+            string PresentageOfPlayer1 = (((double)i_AllGamesData.NumberOfWinsToPlayer1 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfPlayer2 = (((double)i_AllGamesData.NumberOfWinsToPlayer2 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfDraw = (((double)i_AllGamesData.NumberOfDraws / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string table = string.Format
+                (
+@"
+Score Board:
+=========================================
+{0} games were played.
+=========================================
+Player 1 won {1} games ({2}%).
+=========================================
+Player 2 won {3} games ({4}%).
+=========================================
+{5} games were finish in draw ({6}%).
+=========================================
+"
+             , i_AllGamesData.NumberOfGames, i_AllGamesData.NumberOfWinsToPlayer1, PresentageOfPlayer1,
+i_AllGamesData.NumberOfWinsToPlayer2, PresentageOfPlayer2, i_AllGamesData.NumberOfDraws, PresentageOfDraw);
+            Console.WriteLine(table);
         }
     }
 }

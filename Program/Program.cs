@@ -15,12 +15,6 @@ namespace Program
         {
             UserInterface.InterFace uf = new UserInterface.InterFace();
              //uf.DurationOfGame();
-          
-           
-            
-
-
-            
         }
     }
 }
