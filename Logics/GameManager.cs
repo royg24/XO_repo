@@ -16,6 +16,13 @@ namespace Logics
         {
             m_Board = new Board(i_BoardSize);
             m_EmptySpots = new List<Tuple<int, int>>(i_BoardSize * i_BoardSize);
+            for(int i = 0; i < i_BoardSize; i++)
+            {
+                for(int j = 0; j < i_BoardSize; j++)
+                {
+                    m_EmptySpots.Add(Tuple.Create(i, j));
+                }
+            }
             m_TurnsCounter = 0;
         }
         public Board GameBoard { 
@@ -45,18 +52,17 @@ namespace Logics
             int index;
             int row;
             int column;
-            index = random.Next(m_EmptySpots.Count);
+            index = random.Next(0, m_EmptySpots.Count);
             row = m_EmptySpots[index].Item1;
             column = m_EmptySpots[index].Item2;
-            m_Board.BoardMatrix[row - 1, column - 1] = eSpotOnBoard.player2;
-            m_EmptySpots.Remove(new Tuple<int, int>(row - 1, column - 1));
+            m_Board.BoardMatrix[row, column] = eSpotOnBoard.player2;
+            m_EmptySpots.Remove(new Tuple<int, int>(row, column));
 
         }
         public bool PlayGame(Player i_Player1, Player i_Player2, int i_Row, int i_Column) 
         {
             bool result;
-            m_TurnsCounter++;
-            if (m_TurnsCounter % 2 == 1)
+            if (m_TurnsCounter % 2 == 0)
             {
                 result = Turn(i_Player1, i_Row,i_Column);
             }
@@ -64,12 +70,17 @@ namespace Logics
             {
                 if(i_Player2.ComputerOrPerson == true)
                 {
+                    ComputerTurn();
                     result = true;
                 }
                 else
                 {
                     result = Turn(i_Player2, i_Row, i_Column);
                 }
+            }
+            if(result == true)
+            {
+                m_TurnsCounter++;
             }
             return result;
         }
@@ -120,7 +131,7 @@ namespace Logics
         {
             bool result;
             o_QuitingPlayer = CheckCurrentPlayer();
-            if(i_Input == QuitString)
+            if(i_Input == null)
             {
                 result = true;
             }
@@ -146,7 +157,7 @@ namespace Logics
         public eSpotOnBoard CheckCurrentPlayer()
         {
             eSpotOnBoard result;
-            if (m_TurnsCounter % 2 == 1)
+            if (m_TurnsCounter % 2 == 0)
             {
                 result = eSpotOnBoard.player1;
             }
