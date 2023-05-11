@@ -15,6 +15,7 @@ namespace UserInterface
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
+        private AllGamesData m_AllGamesData;
 
         public InterFace()
         {
@@ -192,6 +193,29 @@ please enter a new value."
                 seperatorLine += "=";
             }
             Console.WriteLine(seperatorLine);
+        }
+        public void ShowScoreBoard2(AllGamesData i_AllGamesData)
+        {
+            string PresentageOfPlayer1 = (((double)i_AllGamesData.NumberOfWinsToPlayer1 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfPlayer2 = (((double)i_AllGamesData.NumberOfWinsToPlayer2 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfDraw = (((double)i_AllGamesData.NumberOfDraws / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string table = string.Format
+                (
+@"
+Score Board:
+=========================================
+{0} games were played.
+=========================================
+Player 1 won {1} games ({2}%).
+=========================================
+Player 2 won {3} games ({4}%).
+=========================================
+{5} games were finish in draw ({6}%).
+=========================================
+"
+             , i_AllGamesData.NumberOfGames, i_AllGamesData.NumberOfWinsToPlayer1, PresentageOfPlayer1,
+i_AllGamesData.NumberOfWinsToPlayer2, PresentageOfPlayer2, i_AllGamesData.NumberOfDraws, PresentageOfDraw);
+            Console.WriteLine(table);
         }
     }
 }
