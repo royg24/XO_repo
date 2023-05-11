@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static Logics.BoardSpot;
 namespace Logics
 {
     public class GameManager
@@ -22,21 +22,33 @@ namespace Logics
                 return m_Board;
             }
         }
-        public void Turn(Player i_CurrentPlayer, int i_Row, int i_Column)
+        public bool Turn(Player i_CurrentPlayer, int i_Row, int i_Column)
         {
-
-        }
-        public void PlayGame(Player i_Player1, Player i_Player2, int i_Row, int i_Column) 
-        {
-            if(m_TurnsCounter % 2 == 0)
+            bool result;
+            if (m_Board.BoardMatrix[i_Row - 1, i_Column - 1] == eSpotOnBoard.empty)
             {
-                Turn(i_Player1, i_Row,i_Column);
+                m_Board.BoardMatrix[i_Row - 1, i_Column - 1] = i_CurrentPlayer.Title;
+                result = true;
             }
             else
             {
-                Turn(i_Player2, i_Row, i_Column);
+                result = false;
+            }
+            return result;
+        }
+        public bool PlayGame(Player i_Player1, Player i_Player2, int i_Row, int i_Column) 
+        {
+            bool result;
+            if(m_TurnsCounter % 2 == 0)
+            {
+                result = Turn(i_Player1, i_Row,i_Column);
+            }
+            else
+            {
+                result = Turn(i_Player2, i_Row, i_Column);
             }
             m_TurnsCounter++;
+            return result;
         }
         public bool CheckForASequence (Player i_CurrentPlayer, int i_Row, int i_Column)
         {

@@ -25,11 +25,11 @@ namespace Logics
                 return m_Score;
             }
         }
-        public string Title
+        public eSpotOnBoard Title
         {
             get
             {
-                return m_FirstOrSecondPlayer.ToString();
+                return m_FirstOrSecondPlayer;
             }
         }
     }

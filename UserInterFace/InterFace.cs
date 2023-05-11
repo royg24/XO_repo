@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Logics.BoardSpot;
 using Logics;
+using static Logics.GameManager;
 
 namespace UserInterface
 {
@@ -40,13 +41,47 @@ Please enter the size of the board (a number between 1-9)");
             while(ThereIsSequence == false && PlayerQuits == false && BoardIsFull == false)
             {
                 PrintBoard(m_GameManager.GameBoard.BoardMatrix);
-
+                GetChoosenSpotOnBoardFromPlayer(out row,out column);
+                m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                //check if game ended
                 Ex02.ConsoleUtils.Screen.Clear();
             }
         }
-        public void GetChoosenSpotOnBoardFromPlayer(/*out*/ string o_Row, /*out*/ string o_Column)
+        public void GetChoosenSpotOnBoardFromPlayer(out string o_Row, out string o_Column)
         {
-            Console.WriteLine("Please choose a spot on the board in the format: i j");
+            Console.WriteLine(
+@"Please choose a spot on the board.
+Press Q to quit the game.
+Enter the row's number:"
+                             );
+            o_Row = GetValidIndex();
+            if(o_Row == QuitString)
+            {
+                o_Column = QuitString;
+            }
+            else
+            {
+                Console.WriteLine("Enter the column's number:");
+                o_Column = GetValidIndex();
+            }
+        }
+        public string GetValidIndex()
+        {
+            string input = null;
+            int sizeOfBoard = m_GameManager.GameBoard.BoardMatrix.GetLength(0);
+            do
+            {
+                if(input != null)
+                {
+                    InvalidInputMessagePrint();
+                }
+                input = Console.ReadLine();
+                if (input == GameManager.QuitString)
+                {
+                    break;
+                }
+            } while (int.Parse(input) < 1 || int.Parse(input) > sizeOfBoard);
+            return input;
         }
         public void PlayerOrComputer()
         {
