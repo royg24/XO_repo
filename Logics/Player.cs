@@ -23,5 +23,12 @@ namespace Logics
                 return m_FirstOrSecondPlayer;
             }
         }
+        public bool ComputerOrPerson
+        {
+            get
+            {
+                return m_ComputerOrPerson;
+            }
+        }
     }
 }

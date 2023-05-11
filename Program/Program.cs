@@ -13,8 +13,8 @@ namespace Program
     {
         public static void Main()
         {
-            //UserInterface.InterFace uf = new UserInterface.InterFace();
-            // uf.DurationOfGame();
+            UserInterface.InterFace uf = new UserInterface.InterFace();
+            uf.DurationOfGame();
         }
     }
 }
