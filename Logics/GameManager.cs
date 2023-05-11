@@ -96,8 +96,22 @@ namespace Logics
                         {
                             result = true;
                         }
+                        else if(i_Row + i_Column == m_Board.BoardMatrix.GetLength(0) - 1)
+                        {
+                            if(m_Board.IsSecondaryDiagonalIdentical() == true)
+                            {
+                                result = true;
+                            }
+                        }
                     }
-                    //add secondary
+                    else if(i_Row + i_Column == m_Board.BoardMatrix.GetLength(0) - 1)
+                    {
+                        if (m_Board.IsSecondaryDiagonalIdentical() == true)
+                        {
+                            result = true;
+                        }
+                    }
+                    
                 }
             }
             return result;
