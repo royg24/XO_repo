@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Logics.BoardSpot;
 using Logics;
+using static Logics.GameManager;
 
 namespace UserInterface
 {
@@ -14,15 +15,17 @@ namespace UserInterface
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
+        private AllGamesData m_AllGamesData;
 
         public InterFace()
         {
             Console.WriteLine(
 @"Welcome to reversed Tic-tac-toe!
-Please enter the size of the board (a number between 1-9)");
+Please enter the size of the board (a number between 3-9)");
             int boardSize = ReturnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
             m_Player1 = new Player(eSpotOnBoard.player1, false);
+            m_AllGamesData = new AllGamesData();
             Console.WriteLine(
 @"Choose the type of game:
 1. Play against other player.
@@ -32,21 +35,145 @@ Please enter the size of the board (a number between 1-9)");
         }
         public void DurationOfGame()
         {
-            bool ThereIsSequence = false;
-            bool PlayerQuits = false;
-            bool BoardIsFull = false;
-            string row;
-            string column;
-            while(ThereIsSequence == false && PlayerQuits == false && BoardIsFull == false)
+            int turnsCounter = 0;
+            bool thereIsSequence = false;
+            bool playerQuits = false;
+            bool boardIsFull = false;
+            bool IsSpotNotTaken = false;
+            string row = null;
+            string column = null;
+            eSpotOnBoard currentPlayer;
+            m_AllGamesData.NumberOfGames++;
+            while (thereIsSequence == false && playerQuits == false && boardIsFull == false)
             {
                 PrintBoard(m_GameManager.GameBoard.BoardMatrix);
+                do
+                {
+                    if (turnsCounter % 2 == 1 && m_Player2.ComputerOrPerson == true)
+                    {
+                        m_GameManager.ComputerTurn();
+                        turnsCounter++;
+                    }
+                    else
+                    {
 
+
+                        GetChoosenSpotOnBoardFromPlayer(out row, out column);
+                        if (m_GameManager.CheckIfAPlayerQuit(out currentPlayer, row) == true)
+                        {
+                            playerQuits = true;
+                            UpdateScoreIfPlayerLost(currentPlayer);
+                            break;
+                        }
+                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                        if(IsSpotNotTaken == true)
+                        {
+                            turnsCounter++;
+                        }
+                    }
+                } while (IsSpotNotTaken == false) ;
+                if (playerQuits == false)
+                {
+                    if (m_GameManager.CheckForASequence(out currentPlayer, int.Parse(row) - 1, int.Parse(column) - 1) == true)
+                    {
+                        thereIsSequence = true;
+                        UpdateScoreIfPlayerLost(currentPlayer);
+                        break;
+                    }
+                    if (m_GameManager.CheckIfBoardFull() == true)
+                    {
+                        boardIsFull = true;
+                        m_AllGamesData.NumberOfDraws++;
+                        break;
+                    }
+                }
                 Ex02.ConsoleUtils.Screen.Clear();
             }
+            ShowScoreBoard2(m_AllGamesData);
         }
-        public void GetChoosenSpotOnBoardFromPlayer(/*out*/ string o_Row, /*out*/ string o_Column)
+        public void UpdateScoreIfPlayerLost(eSpotOnBoard i_Loser)
         {
-            Console.WriteLine("Please choose a spot on the board in the format: i j");
+            if (i_Loser == eSpotOnBoard.player1)
+            {
+                m_AllGamesData.NumberOfWinsToPlayer2++;
+            }
+            else
+            {
+                m_AllGamesData.NumberOfWinsToPlayer1++;
+            }
+        }
+        public void GetChoosenSpotOnBoardFromPlayer(out string o_Row, out string o_Column)
+        {
+            Console.WriteLine(
+@"Please choose a spot on the board.
+Press Q to quit the game.
+Enter the row's number:"
+                             );
+            o_Row = GetValidIndex();
+            if(o_Row == null)
+            {
+                o_Column = null;
+            }
+            else
+            {
+                Console.WriteLine("Enter the column's number:");
+                o_Column = GetValidIndex();
+            }
+        }
+        //public string GetValidIndex()
+        //{
+        //    string input = null;
+        //    int sizeOfBoard = m_GameManager.GameBoard.BoardMatrix.GetLength(0);
+        //    do
+        //    {
+        //        if(input != null)
+        //        {
+        //            InvalidInputMessagePrint();
+        //        }
+        //        input = Console.ReadLine();
+        //        if (input == QuitString)
+        //        {
+        //            break;
+        //        }
+        //    } while (int.Parse(input) < 1 || int.Parse(input) > sizeOfBoard);
+        //    return input;
+        //}
+        public string GetValidIndex()
+        {
+            string input = null;
+            int sizeOfBoard = m_GameManager.GameBoard.BoardMatrix.GetLength(0);
+            input = Console.ReadLine();
+            while (!IsStringCanBeParseToInt(input))
+            {
+                if (input == "Q")
+                {
+                    return null;
+                }
+                InvalidInputMessagePrint();
+                input = Console.ReadLine();
+            }
+            int parseToInt = int.Parse(input);
+            if (parseToInt < 1 || parseToInt > sizeOfBoard)
+            {
+                InvalidInputMessagePrint();
+                input = GetValidIndex();
+            }
+
+            return input;
+        }
+        internal bool IsStringCanBeParseToInt(string i_String)
+        {
+            bool res = true;
+            foreach (char element in i_String)
+            {
+                if (element < 48 || element > 57)
+                {
+                    res = false;
+                    break;
+                }
+            }
+            return res;
+
         }
         public void PlayerOrComputer()
         {
@@ -70,7 +197,7 @@ Please enter the size of the board (a number between 1-9)");
         {
             int boardSize;
             int.TryParse(Console.ReadLine(), out boardSize);
-            while (boardSize < 1 || boardSize > 9)
+            while (boardSize < 3 || boardSize > 9)
             {
                 InvalidInputMessagePrint();
                 int.TryParse(Console.ReadLine(), out boardSize);
@@ -78,7 +205,7 @@ Please enter the size of the board (a number between 1-9)");
             return boardSize;
             
         }
-        public void InvalidInputMessagePrint()
+        public static void InvalidInputMessagePrint()
         {
             Console.WriteLine(
 @"Invalid input!
@@ -138,6 +265,29 @@ please enter a new value."
                 seperatorLine += "=";
             }
             Console.WriteLine(seperatorLine);
+        }
+        public void ShowScoreBoard2(AllGamesData i_AllGamesData)
+        {
+            string PresentageOfPlayer1 = (((double)i_AllGamesData.NumberOfWinsToPlayer1 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfPlayer2 = (((double)i_AllGamesData.NumberOfWinsToPlayer2 / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string PresentageOfDraw = (((double)i_AllGamesData.NumberOfDraws / i_AllGamesData.NumberOfGames) * 100).ToString("0.00");
+            string table = string.Format
+                (
+@"
+Score Board:
+=========================================
+{0} games were played.
+=========================================
+Player 1 won {1} games ({2}%).
+=========================================
+Player 2 won {3} games ({4}%).
+=========================================
+{5} games were finish in draw ({6}%).
+=========================================
+"
+             , i_AllGamesData.NumberOfGames, i_AllGamesData.NumberOfWinsToPlayer1, PresentageOfPlayer1,
+i_AllGamesData.NumberOfWinsToPlayer2, PresentageOfPlayer2, i_AllGamesData.NumberOfDraws, PresentageOfDraw);
+            Console.WriteLine(table);
         }
     }
 }

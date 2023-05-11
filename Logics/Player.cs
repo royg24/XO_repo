@@ -9,27 +9,25 @@ namespace Logics
 {
     public class Player
     {
-        private int m_Score;
         private readonly eSpotOnBoard m_FirstOrSecondPlayer;
         private readonly bool m_ComputerOrPerson;
         public Player(eSpotOnBoard i_FirstOrSecondPlayer, bool computerOrPerson)
         {
-            m_Score = 0;
             m_FirstOrSecondPlayer = i_FirstOrSecondPlayer;
             m_ComputerOrPerson = computerOrPerson;
         }
-        public int Score
+        public eSpotOnBoard Title
         {
             get
             {
-                return m_Score;
+                return m_FirstOrSecondPlayer;
             }
         }
-        public string Title
+        public bool ComputerOrPerson
         {
             get
             {
-                return m_FirstOrSecondPlayer.ToString();
+                return m_ComputerOrPerson;
             }
         }
     }
