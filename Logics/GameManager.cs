@@ -39,7 +39,7 @@ namespace Logics
         public bool PlayGame(Player i_Player1, Player i_Player2, int i_Row, int i_Column) 
         {
             bool result;
-            if(m_TurnsCounter % 2 == 0)
+            if(m_TurnsCounter % 2 == 1)
             {
                 result = Turn(i_Player1, i_Row,i_Column);
             }
@@ -50,16 +50,39 @@ namespace Logics
             m_TurnsCounter++;
             return result;
         }
-        public bool CheckForASequence (Player i_CurrentPlayer, int i_Row, int i_Column)
+        public bool CheckForASequence (out eSpotOnBoard o_CurrentPlayer, int i_Row, int i_Column)
         {
-            //1. identical row
-            //2. identical column
-            //3. identical alachson
-            return true;
+            bool result = false;
+            int sizeOfRow = m_Board.BoardMatrix.GetLength(0);
+            o_CurrentPlayer = CheckCurrentPlayer();
+            if(m_Board.IsRowIdentical(i_Row) == true)
+            {
+                result = true;
+            }
+            else
+            {
+                if (m_Board.IsColumnIdentical(i_Column) == true)
+                {
+                    result = true;
+                }
+                else
+                {
+                    if (i_Row == i_Column)
+                    {
+                        if (m_Board.IsMainDiagonalIdentical() == true)
+                        {
+                            result = true;
+                        }
+                    }
+                    //add secondary
+                }
+            }
+            return result;
         }
-        public bool CheckIfAPlayerQuit(Player i_CurrentPlayer, string i_Input)
+        public bool CheckIfAPlayerQuit(out eSpotOnBoard o_QuitingPlayer, string i_Input)
         {
             bool result;
+            o_QuitingPlayer = CheckCurrentPlayer();
             if(i_Input == QuitString)
             {
                 result = true;
@@ -80,6 +103,19 @@ namespace Logics
             else
             {
                 result = false;
+            }
+            return result;
+        }
+        public eSpotOnBoard CheckCurrentPlayer()
+        {
+            eSpotOnBoard result;
+            if (m_TurnsCounter % 2 == 1)
+            {
+                result = eSpotOnBoard.player1;
+            }
+            else
+            {
+                result = eSpotOnBoard.player2;
             }
             return result;
         }
