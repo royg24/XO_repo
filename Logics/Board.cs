@@ -47,7 +47,7 @@ namespace Logics
                 {
                     break;
                 }
-                if (index == i_Row* m_BoardMatrix.GetLength(0))
+                if (index == i_Row * m_BoardMatrix.GetLength(0))
                 {
                     firstSpotOnLine = element;
                     currColumnInRequestedLine++;
