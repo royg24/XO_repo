@@ -10,6 +10,7 @@ namespace Logics
     public class Board
     {
         private eSpotOnBoard[,] m_BoardMatrix;
+      
         public Board(int i_BoardSize)
         {
             m_BoardMatrix = new eSpotOnBoard[i_BoardSize, i_BoardSize];
@@ -34,26 +35,125 @@ namespace Logics
             }
             return res;
         }
-        public bool IsRowIdentical(int i_Row)
+     public bool IsRowIdentical(int i_Row)
         {
-            bool res = true;
             int index = 0;
-            if (m_BoardMatrix[0, i_Row] != eSpotOnBoard.empty)
+            int currColumnInRequestedLine = 0;
+            bool res = true;
+           Nullable <eSpotOnBoard> firstSpotOnLine = null;
+            foreach(eSpotOnBoard element in m_BoardMatrix)
             {
-                foreach (eSpotOnBoard element in m_BoardMatrix)
+                if(currColumnInRequestedLine==m_BoardMatrix.GetLength(1))
                 {
-                    if ((index - i_Row) % m_BoardMatrix.GetLength(0) == 0)
+                    break;
+                }
+                if (index == i_Row* m_BoardMatrix.GetLength(0))
+                {
+                    firstSpotOnLine = element;
+                    currColumnInRequestedLine++;
+                }
+               else if(currColumnInRequestedLine < m_BoardMatrix.GetLength(1) &&firstSpotOnLine!=null)
+                {
+                    currColumnInRequestedLine++;
+                    if(firstSpotOnLine!=element)
                     {
-                        if (m_BoardMatrix[index, i_Row] != m_BoardMatrix[0, i_Row])
+                        res = false;
+                        break;
+                    }
+                }
+                index++;         
+            }
+            return res;
+        }
+        public bool IsColumnIdentical(int i_Column)
+        {
+            int index = 0;
+            Nullable<eSpotOnBoard> firstSpotOnColumn = null;
+            bool res = true;
+            foreach (eSpotOnBoard element in m_BoardMatrix)
+            {
+                
+                if(index % m_BoardMatrix.GetLength(0) == i_Column)
+                {
+                    if(firstSpotOnColumn == null)
+                    {
+                        firstSpotOnColumn = element;
+                    }
+                    else
+                    {
+                        if(firstSpotOnColumn != element)
                         {
                             res = false;
                             break;
                         }
                     }
-                    index++;
                 }
+                index++;
             }
             return res;
         }
+        public bool IsMainDiagonalIdentical()
+        {
+            int index = 0;
+            int currRow = 0;
+            Nullable<eSpotOnBoard> firstSpotOnDiagonal = null;
+            bool res = true;
+                foreach (eSpotOnBoard element in m_BoardMatrix)
+                {
+                currRow = index / m_BoardMatrix.GetLength(0);
+                    if(index == currRow + m_BoardMatrix.GetLength(0) * currRow)
+                    {
+                        if(firstSpotOnDiagonal == null)
+                        {
+                            firstSpotOnDiagonal = element;
+                        }
+                        else
+                        {
+                            if(firstSpotOnDiagonal != element)
+                            {
+                                res = false;
+                                break;
+
+                            }
+                        }
+                    }
+                    index++;
+                }
+            return res;
+        }
+        public bool IsSecondaryDiagonalIdentical()
+        {
+            int row= 0;
+            int column = 0;
+            int index = 0;
+            bool res = true;
+            Nullable<eSpotOnBoard> firstSpotOnDiagonal = null;
+            foreach (eSpotOnBoard element in m_BoardMatrix)
+            {
+                column = index % m_BoardMatrix.GetLength(0);
+                if (index !=0 && index % m_BoardMatrix.GetLength(0) == 0)
+                {
+                    row++;
+                }
+                if (row + column == m_BoardMatrix.GetLength(0) - 1)
+                {
+                    if (firstSpotOnDiagonal == null)
+                    {
+                        firstSpotOnDiagonal = element;
+                    }
+                    else
+                    {
+                        if (firstSpotOnDiagonal != element)
+                        {
+                            res = false;
+                            break;
+                        }
+                    }
+                }
+                index++;
+            }
+            return res;
+        }
+          
     }
 }
