@@ -78,10 +78,6 @@ namespace Logics
                     result = Turn(i_Player2, i_Row, i_Column);
                 }
             }
-            if(result == true)
-            {
-                m_TurnsCounter++;
-            }
             return result;
         }
         public bool CheckForASequence (out eSpotOnBoard o_CurrentPlayer, int i_Row, int i_Column)
@@ -150,6 +146,7 @@ namespace Logics
             }
             else
             {
+                m_TurnsCounter++;
                 result = false;
             }
             return result;

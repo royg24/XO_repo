@@ -44,6 +44,8 @@ Please enter the size of the board (a number between 3-9)");
             string column = null;
             eSpotOnBoard currentPlayer;
             m_AllGamesData.NumberOfGames++;
+            m_GameManager.GameBoard.RestartBoard();
+            Ex02.ConsoleUtils.Screen.Clear();
             while (thereIsSequence == false && playerQuits == false && boardIsFull == false)
             {
                 PrintBoard(m_GameManager.GameBoard.BoardMatrix);
@@ -51,7 +53,7 @@ Please enter the size of the board (a number between 3-9)");
                 {
                     if (turnsCounter % 2 == 1 && m_Player2.ComputerOrPerson == true)
                     {
-                        m_GameManager.ComputerTurn();
+                        m_GameManager.PlayGame(m_Player1, m_Player2, 0, 0);
                         turnsCounter++;
                     }
                     else
@@ -120,24 +122,6 @@ Enter the row's number:"
                 o_Column = GetValidIndex();
             }
         }
-        //public string GetValidIndex()
-        //{
-        //    string input = null;
-        //    int sizeOfBoard = m_GameManager.GameBoard.BoardMatrix.GetLength(0);
-        //    do
-        //    {
-        //        if(input != null)
-        //        {
-        //            InvalidInputMessagePrint();
-        //        }
-        //        input = Console.ReadLine();
-        //        if (input == QuitString)
-        //        {
-        //            break;
-        //        }
-        //    } while (int.Parse(input) < 1 || int.Parse(input) > sizeOfBoard);
-        //    return input;
-        //}
         public string GetValidIndex()
         {
             string input = null;
