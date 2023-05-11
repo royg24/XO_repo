@@ -22,6 +22,16 @@ namespace Logics
                 return m_BoardMatrix; 
             }
         }
+        public void RestartBoard()
+        {
+            for(int i = 0; i < m_BoardMatrix.GetLength(0); i++)
+            {
+                for(int j = 0; j < m_BoardMatrix.GetLength(1); j++)
+                {
+                    m_BoardMatrix[i, j] = eSpotOnBoard.empty;
+                }
+            }
+        }
         public bool IsSpotTaken(int i_Row, int i_Column)
         {
             bool res;
