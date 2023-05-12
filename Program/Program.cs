@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static UserInterface.GameActivation;
-
 namespace ReversedTicTacToe
 {
     public class Program

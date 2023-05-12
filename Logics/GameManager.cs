@@ -70,13 +70,16 @@ namespace Logics
             {
                 if(i_Player2.ComputerOrPerson == true)
                 {
-                    computerTurn();
                     result = true;
                 }
                 else
                 {
                     result = humanTurn(i_Player2, i_Row, i_Column);
                 }
+            }
+            if(result == true)
+            {
+                m_TurnsCounter++;
             }
             return result;
         }
