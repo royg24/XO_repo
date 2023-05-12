@@ -32,7 +32,7 @@ namespace Logics
                 }
             }
         }
-        public bool IsSpotTaken(int i_Row, int i_Column)
+        internal bool IsSpotTaken(int i_Row, int i_Column)
         {
             bool res;
             if (m_BoardMatrix[i_Row, i_Column] == eSpotOnBoard.empty)
@@ -45,7 +45,7 @@ namespace Logics
             }
             return res;
         }
-     public bool IsRowIdentical(int i_Row)
+        internal bool IsRowIdentical(int i_Row)
         {
             int index = 0;
             int currColumnInRequestedLine = 0;
@@ -75,7 +75,7 @@ namespace Logics
             }
             return res;
         }
-        public bool IsColumnIdentical(int i_Column)
+        internal bool IsColumnIdentical(int i_Column)
         {
             int index = 0;
             Nullable<eSpotOnBoard> firstSpotOnColumn = null;
@@ -102,7 +102,7 @@ namespace Logics
             }
             return res;
         }
-        public bool IsMainDiagonalIdentical()
+        internal bool IsMainDiagonalIdentical()
         {
             int index = 0;
             int currRow = 0;
@@ -131,7 +131,7 @@ namespace Logics
                 }
             return res;
         }
-        public bool IsSecondaryDiagonalIdentical()
+        internal bool IsSecondaryDiagonalIdentical()
         {
             int row= 0;
             int column = 0;

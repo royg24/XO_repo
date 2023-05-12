@@ -5,9 +5,9 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logics", "Logics\Logics.csproj", "{976E8FE3-A04C-4965-8EB2-2A17EB0DE587}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterFace", "UserInterFace\UserInterFace.csproj", "{62F4FD53-133A-493F-946C-6954CC2DE9D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterFace\UserInterface.csproj", "{62F4FD53-133A-493F-946C-6954CC2DE9D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Program", "Program\Program.csproj", "{DF065A86-1C0E-424A-BFE1-A4EEC860C89A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reversed Tic Tac Toe", "Program\Reversed Tic Tac Toe.csproj", "{DF065A86-1C0E-424A-BFE1-A4EEC860C89A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

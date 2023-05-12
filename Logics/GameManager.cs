@@ -31,7 +31,7 @@ namespace Logics
                 return m_Board;
             }
         }
-        public bool Turn(Player i_CurrentPlayer, int i_Row, int i_Column)
+        private bool humanTurn(Player i_CurrentPlayer, int i_Row, int i_Column)
         {
             bool result;
             if (m_Board.BoardMatrix[i_Row - 1, i_Column - 1] == eSpotOnBoard.empty)
@@ -46,7 +46,7 @@ namespace Logics
             }
             return result;
         }
-        public void ComputerTurn()
+        private void computerTurn()
         {
             Random random = new Random();
             int index;
@@ -64,18 +64,18 @@ namespace Logics
             bool result;
             if (m_TurnsCounter % 2 == 0)
             {
-                result = Turn(i_Player1, i_Row,i_Column);
+                result = humanTurn(i_Player1, i_Row,i_Column);
             }
             else
             {
                 if(i_Player2.ComputerOrPerson == true)
                 {
-                    ComputerTurn();
+                    computerTurn();
                     result = true;
                 }
                 else
                 {
-                    result = Turn(i_Player2, i_Row, i_Column);
+                    result = humanTurn(i_Player2, i_Row, i_Column);
                 }
             }
             return result;
@@ -123,7 +123,7 @@ namespace Logics
             }
             return result;
         }
-        public bool CheckIfAPlayerQuit(out eSpotOnBoard o_QuitingPlayer, string i_Input)
+        public bool CheckIfAPlayerQuits(out eSpotOnBoard o_QuitingPlayer, string i_Input)
         {
             bool result;
             o_QuitingPlayer = CheckCurrentPlayer();
