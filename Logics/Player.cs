@@ -9,25 +9,25 @@ namespace Logics
 {
     public class Player
     {
-        private readonly eSpotOnBoard m_FirstOrSecondPlayer;
-        private readonly bool m_ComputerOrPerson;
-        public Player(eSpotOnBoard i_FirstOrSecondPlayer, bool computerOrPerson)
+        private readonly eSpotOnBoard r_FirstOrSecondPlayer;
+        private readonly bool r_ComputerOrPerson;
+        public Player(eSpotOnBoard i_FirstOrSecondPlayer, bool i_ComputerOrPerson)
         {
-            m_FirstOrSecondPlayer = i_FirstOrSecondPlayer;
-            m_ComputerOrPerson = computerOrPerson;
+            r_FirstOrSecondPlayer = i_FirstOrSecondPlayer;
+            r_ComputerOrPerson = i_ComputerOrPerson;
         }
         public eSpotOnBoard Title
         {
             get
             {
-                return m_FirstOrSecondPlayer;
+                return r_FirstOrSecondPlayer;
             }
         }
         public bool ComputerOrPerson
         {
             get
             {
-                return m_ComputerOrPerson;
+                return r_ComputerOrPerson;
             }
         }
     }

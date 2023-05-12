@@ -59,8 +59,6 @@ Please enter the size of the board (a number between 3-9)");
                     }
                     else
                     {
-
-
                         getChoosenSpotOnBoardFromPlayer(out row, out column);
                         if (m_GameManager.CheckIfAPlayerQuits(out currentPlayer, row) == true)
                         {
