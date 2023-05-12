@@ -11,7 +11,7 @@ namespace UserInterface
 {
     public class InterFace
     {
-        public const int IncreaseLineLength = 4;
+        public const int k_IncreaseLineLength = 4;
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
@@ -44,7 +44,7 @@ Please enter the size of the board (a number between 3-9)");
             string column = null;
             eSpotOnBoard currentPlayer;
             m_AllGamesData.NumberOfGames++;
-            m_GameManager.GameBoard.RestartBoard();
+            m_GameManager.RestartGame();
             Ex02.ConsoleUtils.Screen.Clear();
             while (thereIsSequence == false && playerQuits == false && boardIsFull == false)
             {
@@ -53,8 +53,9 @@ Please enter the size of the board (a number between 3-9)");
                 {
                     if (turnsCounter % 2 == 1 && m_Player2.ComputerOrPerson == true)
                     {
-                        m_GameManager.PlayGame(m_Player1, m_Player2, 0, 0);
+                        m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
                         turnsCounter++;
+                        break;
                     }
                     else
                     {
@@ -67,10 +68,14 @@ Please enter the size of the board (a number between 3-9)");
                             updateScoreIfPlayerLost(currentPlayer);
                             break;
                         }
-                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
+                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
                         if (IsSpotNotTaken == true)
                         {
                             turnsCounter++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("This spot is taken, please choose another one.");
                         }
                     }
                 } while (IsSpotNotTaken == false);
@@ -91,6 +96,8 @@ Please enter the size of the board (a number between 3-9)");
                 }
                 Ex02.ConsoleUtils.Screen.Clear();
             }
+            Ex02.ConsoleUtils.Screen.Clear();
+            printBoard(m_GameManager.GameBoard.BoardMatrix);
             showScoreBoard(m_AllGamesData);
         }
         private void updateScoreIfPlayerLost(eSpotOnBoard i_Loser)
@@ -221,7 +228,7 @@ please enter a new value."
                 if ((index + 1) % sizeOfLine == 0)
                 {
                     Console.WriteLine("|");
-                    printSeperatorLine(IncreaseLineLength * sizeOfLine + 1);
+                    printSeperatorLine(k_IncreaseLineLength * sizeOfLine + 1);
                 }
                 index++;
             }

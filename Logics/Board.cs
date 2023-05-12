@@ -22,7 +22,7 @@ namespace Logics
                 return m_BoardMatrix; 
             }
         }
-        public void RestartBoard()
+        internal void RestartBoard()
         {
             for(int i = 0; i < m_BoardMatrix.GetLength(0); i++)
             {
