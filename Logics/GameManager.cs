@@ -8,7 +8,6 @@ namespace Logics
 {
     public class GameManager
     {
-        public const string QuitString = "Q";
         private Board m_Board;
         private List<Tuple<int, int>> m_EmptySpots;
         private int m_TurnsCounter;
@@ -16,13 +15,6 @@ namespace Logics
         {
             m_Board = new Board(i_BoardSize);
             m_EmptySpots = new List<Tuple<int, int>>(i_BoardSize * i_BoardSize);
-            for(int i = 0; i < i_BoardSize; i++)
-            {
-                for(int j = 0; j < i_BoardSize; j++)
-                {
-                    m_EmptySpots.Add(Tuple.Create(i, j));
-                }
-            }
             m_TurnsCounter = 0;
         }
         public Board GameBoard { 
@@ -46,38 +38,42 @@ namespace Logics
             }
             return result;
         }
-        private void computerTurn()
+        private void computerTurn(out int o_Row, out int o_Column)
         {
             Random random = new Random();
             int index;
-            int row;
-            int column;
             index = random.Next(0, m_EmptySpots.Count);
-            row = m_EmptySpots[index].Item1;
-            column = m_EmptySpots[index].Item2;
-            m_Board.BoardMatrix[row, column] = eSpotOnBoard.player2;
-            m_EmptySpots.Remove(new Tuple<int, int>(row, column));
+            o_Row = m_EmptySpots[index].Item1;
+            o_Column = m_EmptySpots[index].Item2;
+            m_Board.BoardMatrix[o_Row, o_Column] = eSpotOnBoard.player2;
+            m_EmptySpots.Remove(new Tuple<int, int>(o_Row, o_Column));
+            o_Row++;
+            o_Column++;
 
         }
-        public bool PlayGame(Player i_Player1, Player i_Player2, int i_Row, int i_Column) 
+        public bool PlayGame(Player i_Player1, Player i_Player2, ref string io_Row, ref string io_Column) 
         {
+            int row = int.Parse(io_Row);
+            int column = int.Parse(io_Column);
             bool result;
             if (m_TurnsCounter % 2 == 0)
             {
-                result = humanTurn(i_Player1, i_Row,i_Column);
+                result = humanTurn(i_Player1, row, column);
             }
             else
             {
                 if(i_Player2.ComputerOrPerson == true)
                 {
-                    computerTurn();
+                    computerTurn(out row, out column);
                     result = true;
                 }
                 else
                 {
-                    result = humanTurn(i_Player2, i_Row, i_Column);
+                    result = humanTurn(i_Player2, row, column);
                 }
             }
+            io_Row = row.ToString();
+            io_Column = column.ToString();
             return result;
         }
         public bool CheckForASequence (out eSpotOnBoard o_CurrentPlayer, int i_Row, int i_Column)
@@ -140,7 +136,7 @@ namespace Logics
         public bool CheckIfBoardFull()
         {
             bool result;
-            if(m_TurnsCounter == m_Board.BoardMatrix.Length)
+            if(m_EmptySpots.Count == 0)
             {
                 result = true;
             }
@@ -163,6 +159,23 @@ namespace Logics
                 result = eSpotOnBoard.player2;
             }
             return result;
+        }
+        private void restartEmptySpotsList()
+        {
+            m_EmptySpots.Clear();
+            for (int i = 0; i < m_Board.BoardMatrix.GetLength(0); i++)
+            {
+                for (int j = 0; j < m_Board.BoardMatrix.GetLength(1); j++)
+                {
+                    m_EmptySpots.Add(Tuple.Create(i, j));
+                }
+            }
+        }
+        public void RestartGame()
+        {
+            restartEmptySpotsList();
+            m_Board.RestartBoard();
+            m_TurnsCounter = 0;
         }
     }
 }

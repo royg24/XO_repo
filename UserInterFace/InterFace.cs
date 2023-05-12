@@ -11,7 +11,7 @@ namespace UserInterface
 {
     public class InterFace
     {
-        public const int IncreaseLineLength = 4;
+        public const int k_IncreaseLineLength = 4;
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
@@ -44,7 +44,7 @@ Please enter the size of the board (a number between 3-9)");
             string column = null;
             eSpotOnBoard currentPlayer;
             m_AllGamesData.NumberOfGames++;
-            m_GameManager.GameBoard.RestartBoard();
+            m_GameManager.RestartGame();
             Ex02.ConsoleUtils.Screen.Clear();
             while (thereIsSequence == false && playerQuits == false && boardIsFull == false)
             {
@@ -53,8 +53,9 @@ Please enter the size of the board (a number between 3-9)");
                 {
                     if (turnsCounter % 2 == 1 && m_Player2.ComputerOrPerson == true)
                     {
-                        m_GameManager.PlayGame(m_Player1, m_Player2, 0, 0);
+                        m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
                         turnsCounter++;
+                        break;
                     }
                     else
                     {
@@ -67,13 +68,17 @@ Please enter the size of the board (a number between 3-9)");
                             updateScoreIfPlayerLost(currentPlayer);
                             break;
                         }
-                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, int.Parse(row), int.Parse(column));
-                        if(IsSpotNotTaken == true)
+                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
+                        if (IsSpotNotTaken == true)
                         {
                             turnsCounter++;
                         }
+                        else
+                        {
+                            Console.WriteLine("This spot is taken, please choose another one.");
+                        }
                     }
-                } while (IsSpotNotTaken == false) ;
+                } while (IsSpotNotTaken == false);
                 if (playerQuits == false)
                 {
                     if (m_GameManager.CheckForASequence(out currentPlayer, int.Parse(row) - 1, int.Parse(column) - 1) == true)
@@ -91,6 +96,8 @@ Please enter the size of the board (a number between 3-9)");
                 }
                 Ex02.ConsoleUtils.Screen.Clear();
             }
+            Ex02.ConsoleUtils.Screen.Clear();
+            printBoard(m_GameManager.GameBoard.BoardMatrix);
             showScoreBoard(m_AllGamesData);
         }
         private void updateScoreIfPlayerLost(eSpotOnBoard i_Loser)
@@ -112,7 +119,7 @@ Press Q to quit the game.
 Enter the row's number:"
                              );
             o_Row = getValidIndex();
-            if(o_Row == null)
+            if (o_Row == null)
             {
                 o_Column = null;
             }
@@ -163,12 +170,12 @@ Enter the row's number:"
         {
             string choice;
             choice = Console.ReadLine();
-            while(choice != "1" && choice != "2")
+            while (choice != "1" && choice != "2")
             {
                 InvalidInputMessagePrint();
                 choice = Console.ReadLine();
             }
-            if(choice == "1")
+            if (choice == "1")
             {
                 m_Player2 = new Player(eSpotOnBoard.player2, false);
             }
@@ -187,7 +194,7 @@ Enter the row's number:"
                 int.TryParse(Console.ReadLine(), out boardSize);
             }
             return boardSize;
-            
+
         }
         internal static void InvalidInputMessagePrint()
         {
@@ -203,7 +210,7 @@ please enter a new value."
             string upperIndex;
             int sizeOfLine = i_GmaeBoard.GetLength(0);
             int index = 0;
-            for(int i = 0; i < sizeOfLine; i++)
+            for (int i = 0; i < sizeOfLine; i++)
             {
                 upperIndex = string.Format("  {0} ", i + 1);
                 Console.Write(upperIndex);
@@ -211,7 +218,7 @@ please enter a new value."
             Console.WriteLine();
             foreach (eSpotOnBoard element in i_GmaeBoard)
             {
-                if(index % sizeOfLine  == 0)
+                if (index % sizeOfLine == 0)
                 {
                     startingIndex = string.Format("{0}", (index / sizeOfLine) + 1);
                     Console.Write(startingIndex);
@@ -221,7 +228,7 @@ please enter a new value."
                 if ((index + 1) % sizeOfLine == 0)
                 {
                     Console.WriteLine("|");
-                    printSeperatorLine(IncreaseLineLength * sizeOfLine + 1);
+                    printSeperatorLine(k_IncreaseLineLength * sizeOfLine + 1);
                 }
                 index++;
             }
