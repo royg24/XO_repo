@@ -9,15 +9,15 @@ using static Logics.GameManager;
 
 namespace UserInterface
 {
-    public class InterFace
+    internal class InterFace
     {
-        public const int k_IncreaseLineLength = 4;
+        private const int k_IncreaseLineLength = 4;
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
         private AllGamesData m_AllGamesData;
 
-        public InterFace()
+        internal InterFace()
         {
             Console.WriteLine(
 @"Welcome to reversed Tic-tac-toe!

@@ -10,7 +10,6 @@ namespace Logics
     public class Board
     {
         private eSpotOnBoard[,] m_BoardMatrix;
-      
         public Board(int i_BoardSize)
         {
             m_BoardMatrix = new eSpotOnBoard[i_BoardSize, i_BoardSize];
@@ -20,6 +19,10 @@ namespace Logics
             get 
             {
                 return m_BoardMatrix; 
+            }
+            set 
+            { 
+                m_BoardMatrix = value;
             }
         }
         internal void RestartBoard()
