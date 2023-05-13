@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using static Logics.BoardSpot;
 using Logics;
 using static Logics.GameManager;
+using System.Runtime.Remoting.Lifetime;
 
 namespace UserInterface
 {
     internal class InterFace
     {
         private const int k_IncreaseLineLength = 4;
+        private const int k_LengthForShowBoard = 3;
         private Player m_Player1;
         private Player m_Player2;
         private GameManager m_GameManager;
@@ -19,19 +21,32 @@ namespace UserInterface
 
         internal InterFace()
         {
+            string waitForEnter = null;
+            Console.WriteLine("Welcome to reversed Tic-tac-toe!");
+            printBoardForShowInTheStartOfTheGame();
             Console.WriteLine(
-@"Welcome to reversed Tic-tac-toe!
-Please enter the size of the board (a number between 3-9)");
+@"Enjoy the game!!!
+Press ENTER to start the game");
+            while(waitForEnter != "")
+            {
+                waitForEnter = Console.ReadLine();
+            }
+            Ex02.ConsoleUtils.Screen.Clear();
+            Console.WriteLine(
+@"Please enter the size of the board(a number between 3 - 9)
+and then press ENTER");
             int boardSize = returnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
             m_Player1 = new Player(eSpotOnBoard.player1, false);
             m_AllGamesData = new AllGamesData();
+            Ex02.ConsoleUtils.Screen.Clear();
             Console.WriteLine(
 @"Choose the type of game:
 1. Play against other player.
-2. Play against the computer.");
+2. Play against the computer.
+and then press ENTER");
             playerOrComputer();
-
+            Ex02.ConsoleUtils.Screen.Clear();
         }
         internal void DurationOfGame()
         {
@@ -114,7 +129,7 @@ Please enter the size of the board (a number between 3-9)");
             Console.WriteLine(
 @"Please choose a spot on the board.
 Press Q to quit the game.
-Enter the row's number:"
+Enter the row's number and then press ENTER:"
                              );
             o_Row = getValidIndex();
             if (o_Row == null)
@@ -123,7 +138,7 @@ Enter the row's number:"
             }
             else
             {
-                Console.WriteLine("Enter the column's number:");
+                Console.WriteLine("Enter the column's number and then press ENTER:");
                 o_Column = getValidIndex();
             }
         }
@@ -277,6 +292,26 @@ Player 2 won {3} games ({4}%).
              , i_AllGamesData.NumberOfGames, i_AllGamesData.NumberOfWinsToPlayer1, PresentageOfPlayer1,
 i_AllGamesData.NumberOfWinsToPlayer2, PresentageOfPlayer2, i_AllGamesData.NumberOfDraws, PresentageOfDraw);
             Console.WriteLine(table);
+        }
+        private void printBoardForShowInTheStartOfTheGame()
+        {
+            Board printedBoard = new Board(k_LengthForShowBoard);
+            
+            for (int i = 0; i < k_LengthForShowBoard ; i++)
+            {
+                for (int j = 0; j < k_LengthForShowBoard; j++)
+                {
+                    if((i + j) % 2 == 0)
+                    {
+                        printedBoard.BoardMatrix[i, j] = eSpotOnBoard.player1;
+                    }
+                    else
+                    {
+                        printedBoard.BoardMatrix[i, j] = eSpotOnBoard.player2;
+                    }
+                }
+            }
+            printBoard(printedBoard.BoardMatrix);
         }
     }
 }

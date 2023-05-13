@@ -12,6 +12,7 @@ namespace ReversedTicTacToe
         public static void Main()
         {
             ActivateGame();
+            Ex02.ConsoleUtils.Screen.Clear();
         }
     }
 }
