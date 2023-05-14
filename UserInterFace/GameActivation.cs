@@ -16,6 +16,10 @@ namespace UserInterface
             {
                 userInterface.DurationOfGame();
             } while (askForAnotherGame() == true);
+            Ex02.ConsoleUtils.Screen.Clear();
+            Console.WriteLine(
+ @"Thanks for playing, hope you had a good time!
+Bye Bye...");
         }
         private static bool askForAnotherGame()
         {

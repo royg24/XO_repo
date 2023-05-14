@@ -12,10 +12,6 @@ namespace ReversedTicTacToe
         public static void Main()
         {
             ActivateGame();
-            Ex02.ConsoleUtils.Screen.Clear();
-            Console.WriteLine(
- @"Thanks for playing, hope you had a good time!
-Bye Bye...");
         }
     }
 }
