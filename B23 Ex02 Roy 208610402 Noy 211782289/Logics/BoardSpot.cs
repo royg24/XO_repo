@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace Logics
 {
+    public struct BoardSpot
+    {
         public enum eSpotOnBoard
         {
             empty = 0,
             player1 = 1,
             player2 = 2,
         }
+    }
 }

@@ -3,37 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Logics.BoardSpot;
 namespace Logics
 {
     public class GameManager
     {
         private Board m_Board;
-        private Player m_Player1;
-        private Player m_Player2;
         private List<Tuple<int, int>> m_EmptySpots;
         private int m_TurnsCounter;
-        public Player Player1
-        {
-            get
-            {
-                return m_Player1;
-            }
-            set
-            {
-                m_Player1 = value;
-            }
-        }
-        public Player Player2
-        {
-            get
-            {
-                return m_Player2;
-            }
-            set
-            {
-                m_Player2 = value;
-            }
-        }
         public GameManager(int i_BoardSize)
         {
             m_Board = new Board(i_BoardSize);
@@ -61,10 +38,6 @@ namespace Logics
             }
             return result;
         }
-        public void CreatePlayer2(bool i_PlayerOrComputer)
-        {
-            m_Player2 = new Player(eSpotOnBoard.player2, i_PlayerOrComputer);
-        }
         private void computerTurn(out int o_Row, out int o_Column)
         {
             Random random = new Random();
@@ -78,25 +51,25 @@ namespace Logics
             o_Column++;
 
         }
-        public bool Turn(ref string io_Row, ref string io_Column) 
+        public bool PlayGame(Player i_Player1, Player i_Player2, ref string io_Row, ref string io_Column) 
         {
             int row = int.Parse(io_Row);
             int column = int.Parse(io_Column);
             bool result;
             if (m_TurnsCounter % 2 == 0)
             {
-                result = humanTurn(m_Player1, row, column);
+                result = humanTurn(i_Player1, row, column);
             }
             else
             {
-                if(m_Player2.ComputerOrPerson == true)
+                if(i_Player2.ComputerOrPerson == true)
                 {
                     computerTurn(out row, out column);
                     result = true;
                 }
                 else
                 {
-                    result = humanTurn(m_Player2, row, column);
+                    result = humanTurn(i_Player2, row, column);
                 }
             }
             io_Row = row.ToString();

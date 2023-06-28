@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Logics.BoardSpot;
 using Logics;
 using static Logics.GameManager;
 using System.Runtime.Remoting.Lifetime;
@@ -13,6 +14,8 @@ namespace UserInterface
     {
         private const int k_IncreaseLineLength = 4;
         private const int k_LengthForShowBoard = 3;
+        private Player m_Player1;
+        private Player m_Player2;
         private GameManager m_GameManager;
         private AllGamesData m_AllGamesData;
 
@@ -34,7 +37,7 @@ Press ENTER to start the game");
 and then press ENTER");
             int boardSize = returnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
-            m_GameManager.Player1 = new Player(eSpotOnBoard.player1, false);
+            m_Player1 = new Player(eSpotOnBoard.player1, false);
             m_AllGamesData = new AllGamesData();
             Ex02.ConsoleUtils.Screen.Clear();
             Console.WriteLine(
@@ -63,39 +66,41 @@ and then press ENTER");
                 printBoard(m_GameManager.GameBoard.BoardMatrix);
                 do
                 {
-                    if (!(turnsCounter % 2 == 1) || !m_GameManager.Player2.ComputerOrPerson)
+                    if (turnsCounter % 2 == 1 && m_Player2.ComputerOrPerson == true)
+                    {
+                        m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
+                        turnsCounter++;
+                        break;
+                    }
+                    else
                     {
                         getChoosenSpotOnBoardFromPlayer(out row, out column);
-                        if (m_GameManager.CheckIfAPlayerQuits(out currentPlayer, row))
+                        if (m_GameManager.CheckIfAPlayerQuits(out currentPlayer, row) == true)
                         {
                             playerQuits = true;
-                            m_AllGamesData.UpdateScoreIfPlayerLost(currentPlayer);
+                            updateScoreIfPlayerLost(currentPlayer);
                             break;
                         }
+                        IsSpotNotTaken = m_GameManager.PlayGame(m_Player1, m_Player2, ref row, ref column);
+                        if (IsSpotNotTaken == true)
+                        {
+                            turnsCounter++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("This spot is taken, please choose another one.");
+                        }
                     }
-                    else
-                    {
-                        turnsCounter++;
-                    }
-                    IsSpotNotTaken = m_GameManager.Turn( ref row, ref column);
-                    if (IsSpotNotTaken == true)
-                    {
-                       turnsCounter++;
-                    }
-                    else
-                    {
-                       Console.WriteLine("This spot is taken, please choose another one.");
-                    }
-                } while (!IsSpotNotTaken);
-                if (!playerQuits)
+                } while (IsSpotNotTaken == false);
+                if (playerQuits == false)
                 {
                     if (m_GameManager.CheckForASequence(out currentPlayer, int.Parse(row) - 1, int.Parse(column) - 1) == true)
                     {
                         thereIsSequence = true;
-                        m_AllGamesData.UpdateScoreIfPlayerLost(currentPlayer);
+                        updateScoreIfPlayerLost(currentPlayer);
                         break;
                     }
-                    if (m_GameManager.CheckIfBoardFull())
+                    if (m_GameManager.CheckIfBoardFull() == true)
                     {
                         boardIsFull = true;
                         m_AllGamesData.NumberOfDraws++;
@@ -107,6 +112,17 @@ and then press ENTER");
             Ex02.ConsoleUtils.Screen.Clear();
             printBoard(m_GameManager.GameBoard.BoardMatrix);
             showScoreBoard(m_AllGamesData);
+        }
+        private void updateScoreIfPlayerLost(eSpotOnBoard i_Loser)
+        {
+            if (i_Loser == eSpotOnBoard.player1)
+            {
+                m_AllGamesData.NumberOfWinsToPlayer2++;
+            }
+            else
+            {
+                m_AllGamesData.NumberOfWinsToPlayer1++;
+            }
         }
         private void getChoosenSpotOnBoardFromPlayer(out string o_Row, out string o_Column)
         {
@@ -172,7 +188,14 @@ Enter the row's number and then press ENTER:"
                 InvalidInputMessagePrint();
                 choice = Console.ReadLine();
             }
-            m_GameManager.CreatePlayer2(choice == "2");
+            if (choice == "1")
+            {
+                m_Player2 = new Player(eSpotOnBoard.player2, false);
+            }
+            else
+            {
+                m_Player2 = new Player(eSpotOnBoard.player2, true);
+            }
         }
         private int returnValidBoardSize()
         {
