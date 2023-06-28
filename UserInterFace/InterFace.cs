@@ -47,61 +47,30 @@ and then press ENTER");
         }
         internal void DurationOfGame()
         {
-            int turnsCounter = 0;
-            bool thereIsSequence = false;
-            bool playerQuits = false;
-            bool boardIsFull = false;
             bool IsSpotNotTaken = false;
             string row = null;
             string column = null;
-            eSpotOnBoard currentPlayer;
+            eGameSituations result = eGameSituations.notFinished;
+            eGameSituations currentPlayer;
             m_AllGamesData.NumberOfGames++;
             m_GameManager.RestartGame();
             Ex02.ConsoleUtils.Screen.Clear();
-            while (thereIsSequence == false && playerQuits == false && boardIsFull == false)
+            while (result == eGameSituations.notFinished)
             {
                 printBoard(m_GameManager.GameBoard.BoardMatrix);
                 do
                 {
-                    if (!(turnsCounter % 2 == 1) || !m_GameManager.Player2.ComputerOrPerson)
+                    currentPlayer = m_GameManager.CheckCurrentPlayer();
+                    if (currentPlayer == eGameSituations.player1 || !m_GameManager.Player2.ComputerOrPerson)
                     {
                         getChoosenSpotOnBoardFromPlayer(out row, out column);
-                        if (m_GameManager.CheckIfAPlayerQuits(out currentPlayer, row))
-                        {
-                            playerQuits = true;
-                            m_AllGamesData.UpdateScoreIfPlayerLost(currentPlayer);
-                            break;
-                        }
                     }
-                    else
+                    IsSpotNotTaken = m_GameManager.Turn(row, column, m_GameManager.CheckCurrentPlayer(), ref result, m_AllGamesData);
+                    if (!IsSpotNotTaken)
                     {
-                        turnsCounter++;
-                    }
-                    IsSpotNotTaken = m_GameManager.Turn( ref row, ref column);
-                    if (IsSpotNotTaken == true)
-                    {
-                       turnsCounter++;
-                    }
-                    else
-                    {
-                       Console.WriteLine("This spot is taken, please choose another one.");
+                        Console.WriteLine("This spot is taken, please choose another one.");
                     }
                 } while (!IsSpotNotTaken);
-                if (!playerQuits)
-                {
-                    if (m_GameManager.CheckForASequence(out currentPlayer, int.Parse(row) - 1, int.Parse(column) - 1) == true)
-                    {
-                        thereIsSequence = true;
-                        m_AllGamesData.UpdateScoreIfPlayerLost(currentPlayer);
-                        break;
-                    }
-                    if (m_GameManager.CheckIfBoardFull())
-                    {
-                        boardIsFull = true;
-                        m_AllGamesData.NumberOfDraws++;
-                        break;
-                    }
-                }
                 Ex02.ConsoleUtils.Screen.Clear();
             }
             Ex02.ConsoleUtils.Screen.Clear();

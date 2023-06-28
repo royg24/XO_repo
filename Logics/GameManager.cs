@@ -78,75 +78,98 @@ namespace Logics
             o_Column++;
 
         }
-        public bool Turn(ref string io_Row, ref string io_Column) 
+        public eGameSituations CheckResultOfTurn(AllGamesData i_Data, eGameSituations i_CurrentPlayer, int i_Row, int i_Column)
         {
-            int row = int.Parse(io_Row);
-            int column = int.Parse(io_Column);
-            bool result;
-            if (m_TurnsCounter % 2 == 0)
+            eGameSituations result = CheckForASequence(i_CurrentPlayer, i_Row - 1, i_Column - 1);
+            if (result != eGameSituations.notFinished)
             {
-                result = humanTurn(m_Player1, row, column);
+                i_Data.UpdateScoreIfPlayerLost(i_CurrentPlayer);
+                changePlayer(result);
+            }
+            else if (CheckIfBoardFull())
+            {
+                i_Data.NumberOfDraws++;
+                result = eGameSituations.tie;
+            }
+            return result;
+        }
+        public bool Turn(string i_Row, string i_Column, eGameSituations i_CurrentPlayer, ref eGameSituations io_Result, AllGamesData i_Data) 
+        {
+            bool result = true; 
+            if (CheckIfAPlayerQuits(i_CurrentPlayer, i_Row))
+            {
+                i_Data.UpdateScoreIfPlayerLost(i_CurrentPlayer);
+                io_Result = changePlayer(i_CurrentPlayer);
             }
             else
             {
-                if(m_Player2.ComputerOrPerson == true)
+                int row = int.Parse(i_Row);
+                int column = int.Parse(i_Column);
+                if (m_TurnsCounter % 2 == 0)
                 {
-                    computerTurn(out row, out column);
-                    result = true;
+                    result = humanTurn(m_Player1, row, column);
                 }
                 else
                 {
-                    result = humanTurn(m_Player2, row, column);
+                    if (m_Player2.ComputerOrPerson == true)
+                    {
+                        computerTurn(out row, out column);
+                        result = true;
+                    }
+                    else
+                    {
+                        result = humanTurn(m_Player2, row, column);
+                    }
+                }
+                if (io_Result == eGameSituations.notFinished)
+                {
+                    io_Result = CheckResultOfTurn(i_Data, i_CurrentPlayer, row, column);
                 }
             }
-            io_Row = row.ToString();
-            io_Column = column.ToString();
             return result;
         }
-        public bool CheckForASequence (out eSpotOnBoard o_CurrentPlayer, int i_Row, int i_Column)
+        public eGameSituations CheckForASequence (eGameSituations i_CurrentPlayer, int i_Row, int i_Column)
         {
-            bool result = false;
             int sizeOfRow = m_Board.BoardMatrix.GetLength(0);
-            o_CurrentPlayer = CheckCurrentPlayer();
-            if(m_Board.IsRowIdentical(i_Row) == true)
+            eGameSituations result = eGameSituations.notFinished;
+            if(m_Board.IsRowIdentical(i_Row))
             {
-                result = true;
+                result = changePlayer(i_CurrentPlayer);
             }
             else
             {
-                if (m_Board.IsColumnIdentical(i_Column) == true)
+                if (m_Board.IsColumnIdentical(i_Column))
                 {
-                    result = true;
+                    result = changePlayer(i_CurrentPlayer);
                 }
                 else
                 {
                     if (i_Row == i_Column)
                     {
-                        if (m_Board.IsMainDiagonalIdentical() == true)
+                        if (m_Board.IsMainDiagonalIdentical())
                         {
-                            result = true;
+                            result = changePlayer(i_CurrentPlayer);
                         }
                         else if(i_Row + i_Column == m_Board.BoardMatrix.GetLength(0) - 1)
                         {
-                            if(m_Board.IsSecondaryDiagonalIdentical() == true)
+                            if(m_Board.IsSecondaryDiagonalIdentical())
                             {
-                                result = true;
+                                result = changePlayer(i_CurrentPlayer);
                             }
                         }
                     }
                     else if(i_Row + i_Column == m_Board.BoardMatrix.GetLength(0) - 1)
                     {
-                        if (m_Board.IsSecondaryDiagonalIdentical() == true)
+                        if (m_Board.IsSecondaryDiagonalIdentical())
                         {
-                            result = true;
+                            result = changePlayer(i_CurrentPlayer);
                         }
-                    }
-                    
+                    } 
                 }
             }
             return result;
         }
-        public bool CheckIfAPlayerQuits(out eSpotOnBoard o_QuitingPlayer, string i_Input)
+        public bool CheckIfAPlayerQuits(eGameSituations o_QuitingPlayer, string i_Input)
         {
             bool result;
             o_QuitingPlayer = CheckCurrentPlayer();
@@ -159,6 +182,18 @@ namespace Logics
                 result = false;
             }
             return result;
+        }
+        private eGameSituations changePlayer(eGameSituations i_Player)
+        {
+            if (i_Player == eGameSituations.player1)
+            {
+                i_Player = eGameSituations.player2;
+            }
+            else if(i_Player == eGameSituations.player2)
+            {
+                i_Player = eGameSituations.player1;
+            }
+            return i_Player;
         }
         public bool CheckIfBoardFull()
         {
@@ -174,16 +209,16 @@ namespace Logics
             }
             return result;
         }
-        public eSpotOnBoard CheckCurrentPlayer()
+        public eGameSituations CheckCurrentPlayer()
         {
-            eSpotOnBoard result;
+            eGameSituations result;
             if (m_TurnsCounter % 2 == 0)
             {
-                result = eSpotOnBoard.player1;
+                result = eGameSituations.player1;
             }
             else
             {
-                result = eSpotOnBoard.player2;
+                result = eGameSituations.player2;
             }
             return result;
         }

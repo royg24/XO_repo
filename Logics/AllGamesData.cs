@@ -64,9 +64,9 @@ namespace Logics
                 m_NumberOfWinsToPlayer2 = value;
             }
         }
-        public void UpdateScoreIfPlayerLost(eSpotOnBoard i_Loser)
+        public void UpdateScoreIfPlayerLost(eGameSituations i_Loser)
         {
-            if (i_Loser == eSpotOnBoard.player1)
+            if (i_Loser == eGameSituations.player1)
             {
                 NumberOfWinsToPlayer2++;
             }
