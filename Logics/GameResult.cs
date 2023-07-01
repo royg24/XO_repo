@@ -9,8 +9,8 @@ namespace Logics
     public enum eGameSituations
     {
         tie = 0,
-        player1 = 1,
-        player2 = 2,
+        player1Won = 1,
+        player2Won = 2,
         notFinished = 3,
     }
 }

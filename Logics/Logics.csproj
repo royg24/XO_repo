@@ -43,7 +43,7 @@
     <Compile Include="Board.cs" />
     <Compile Include="BoardSpot.cs" />
     <Compile Include="GameManager.cs" />
-    <Compile Include="GameResullt.cs" />
+    <Compile Include="GameResult.cs" />
     <Compile Include="Player.cs" />
   </ItemGroup>
   <ItemGroup>

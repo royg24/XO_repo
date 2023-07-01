@@ -14,7 +14,6 @@ namespace UserInterface
         private const int k_IncreaseLineLength = 4;
         private const int k_LengthForShowBoard = 3;
         private GameManager m_GameManager;
-        private AllGamesData m_AllGamesData;
 
         internal InterFace()
         {
@@ -34,8 +33,6 @@ Press ENTER to start the game");
 and then press ENTER");
             int boardSize = returnValidBoardSize();
             m_GameManager = new GameManager(boardSize);
-            m_GameManager.Player1 = new Player(eSpotOnBoard.player1, false);
-            m_AllGamesData = new AllGamesData();
             Ex02.ConsoleUtils.Screen.Clear();
             Console.WriteLine(
 @"Choose the type of game:
@@ -51,8 +48,8 @@ and then press ENTER");
             string row = null;
             string column = null;
             eGameSituations result = eGameSituations.notFinished;
-            eGameSituations currentPlayer;
-            m_AllGamesData.NumberOfGames++;
+            eSpotOnBoard currentPlayer;
+            m_GameManager.Data.NumberOfGames++;
             m_GameManager.RestartGame();
             Ex02.ConsoleUtils.Screen.Clear();
             while (result == eGameSituations.notFinished)
@@ -61,21 +58,38 @@ and then press ENTER");
                 do
                 {
                     currentPlayer = m_GameManager.CheckCurrentPlayer();
-                    if (currentPlayer == eGameSituations.player1 || !m_GameManager.Player2.ComputerOrPerson)
+                    if (currentPlayer == eSpotOnBoard.player1 || !m_GameManager.Player2.ComputerOrPerson)
                     {
                         getChoosenSpotOnBoardFromPlayer(out row, out column);
+                        if (!m_GameManager.CheckIfAPlayerQuits(currentPlayer, row, ref result))
+                        {
+                            IsSpotNotTaken = m_GameManager.HumanTurn(m_GameManager.CheckCurrentPlayer(), row, column);
+                        }
+                        else
+                        {
+                            IsSpotNotTaken = false;
+                            break;
+                        }
                     }
-                    IsSpotNotTaken = m_GameManager.Turn(row, column, m_GameManager.CheckCurrentPlayer(), ref result, m_AllGamesData);
+                    else
+                    {
+                        IsSpotNotTaken = true;
+                        m_GameManager.ComputerTurn(out row, out column, ref result, m_GameManager.CheckCurrentPlayer(), m_GameManager.Data);
+                    }
                     if (!IsSpotNotTaken)
                     {
                         Console.WriteLine("This spot is taken, please choose another one.");
                     }
                 } while (!IsSpotNotTaken);
+                if(result == eGameSituations.notFinished)
+                {
+                    m_GameManager.CheckResultOfTurn(row, column, m_GameManager.CheckCurrentPlayer(), ref result, m_GameManager.Data);
+                }
                 Ex02.ConsoleUtils.Screen.Clear();
             }
             Ex02.ConsoleUtils.Screen.Clear();
             printBoard(m_GameManager.GameBoard.BoardMatrix);
-            showScoreBoard(m_AllGamesData);
+            showScoreBoard(m_GameManager.Data);
         }
         private void getChoosenSpotOnBoardFromPlayer(out string o_Row, out string o_Column)
         {
