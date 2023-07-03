@@ -94,7 +94,7 @@ namespace Logics
             o_Row = row.ToString();
             o_Column = column.ToString();
         }
-        public void ComputerTurn(out string o_Row, out string o_Column, ref eGameSituations io_Result, eSpotOnBoard i_CurrentPlayer, AllGamesData i_Data)
+        public void ComputerTurn(out string o_Row, out string o_Column)
         {
             computerTurnInner(out o_Row, out o_Column);
         }
